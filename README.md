@@ -14,6 +14,8 @@
 
 MP3 파일을 `assets/audio` 폴더에 아래 이름으로 넣으면 상단 플레이어가 바로 작동합니다.
 
+첫 곡은 HTML에 음원 주소를 직접 연결해 페이지가 열릴 때 자동재생을 시도합니다. 브라우저가 소리 있는 자동재생을 차단하면 상단 재생 버튼을 한 번 눌러 시작하면 됩니다.
+
 - `01-tomorrow-will-be-sunny.mp3`
 - `02-841-days.mp3`
 - `03-blueprint-for-tomorrow.mp3`
@@ -21,7 +23,9 @@ MP3 파일을 `assets/audio` 폴더에 아래 이름으로 넣으면 상단 플�
 - `05-radio-haeon.mp3`
 - `06-sugar-after-the-end.mp3`
 
-곡명이나 파일 경로를 바꾸려면 `index.html` 맨 아래의 `tracks` 배열만 수정하면 됩니다.
+곡명이나 파일 경로를 바꾸려면 `script.js`의 `tracks` 배열만 수정하면 됩니다.
+
+상단 메뉴는 `#home`, `#people`, `#rebuild`, `#map` 주소를 사용합니다. 예전에 사용하던 `#about`, `#places`, `#top` 주소도 자동으로 대응합니다.
 
 ## 구조
 

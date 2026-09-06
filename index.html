@@ -7,7 +7,8 @@
   <meta name="description" content="폐허 위에서 다시 일상을 짓는 해온마을의 한 화면형 정착 안내 단말기.">
   <title>내일은 분명 맑음 | 해온마을</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b302e'/%3E%3Ccircle cx='32' cy='29' r='12' fill='%23efb52e'/%3E%3Cpath d='M12 46h40' stroke='%23fff7df' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
+  <base href="./">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <div class="app">
@@ -27,23 +28,23 @@
 
     <div class="workspace">
       <aside class="rail">
-        <div class="rail-brand">
+        <a class="rail-brand" href="#home">
           <span class="brand-mark" aria-hidden="true">☀</span>
           <div><strong>해온 정착 단말기</strong><span>HAEON SAFE SETTLEMENT</span></div>
-        </div>
+        </a>
         <nav class="panel-nav" role="tablist" aria-label="해온 소개 메뉴">
-          <button class="nav-button" type="button" role="tab" aria-selected="true" aria-controls="panel-home" data-panel-target="home">
+          <a class="nav-button" href="#home" role="tab" aria-selected="true" aria-controls="panel-home" data-panel-target="home">
             <span class="nav-no">01</span><span class="nav-label"><strong>HOME</strong><span>정착 안내</span></span><span class="nav-arrow">›</span>
-          </button>
-          <button class="nav-button" type="button" role="tab" aria-selected="false" aria-controls="panel-people" data-panel-target="people">
+          </a>
+          <a class="nav-button" href="#people" role="tab" aria-selected="false" aria-controls="panel-people" data-panel-target="people">
             <span class="nav-no">02</span><span class="nav-label"><strong>PEOPLE</strong><span>주민 기록</span></span><span class="nav-arrow">›</span>
-          </button>
-          <button class="nav-button" type="button" role="tab" aria-selected="false" aria-controls="panel-rebuild" data-panel-target="rebuild">
+          </a>
+          <a class="nav-button" href="#rebuild" role="tab" aria-selected="false" aria-controls="panel-rebuild" data-panel-target="rebuild">
             <span class="nav-no">03</span><span class="nav-label"><strong>RE:BUILD</strong><span>재건 현황</span></span><span class="nav-arrow">›</span>
-          </button>
-          <button class="nav-button" type="button" role="tab" aria-selected="false" aria-controls="panel-map" data-panel-target="map">
+          </a>
+          <a class="nav-button" href="#map" role="tab" aria-selected="false" aria-controls="panel-map" data-panel-target="map">
             <span class="nav-no">04</span><span class="nav-label"><strong>MAP</strong><span>구역 안내</span></span><span class="nav-arrow">›</span>
-          </button>
+          </a>
         </nav>
         <div class="rail-foot">SYSTEM <b>ONLINE</b><br>DAY 1127 · HAEON_OS v2.1<br>ACCESS: NEW RESIDENT</div>
       </aside>
@@ -57,15 +58,15 @@
                 <h1 class="home-title"><span>내일은</span><span>분명 <em>맑음</em></span></h1>
                 <p class="home-lead">세상이 끝난 지 3년. 우리는 아직 장사하고, 농사짓고, 말다툼하고, 축제를 연다. 생존자 캠프였던 곳이 다시 마을이라 불리기 시작했다.</p>
                 <div class="home-actions">
-                  <button class="action-button dark" type="button" data-go-panel="people">주민 만나기 <span aria-hidden="true">→</span></button>
+                  <a class="action-button dark" href="#people" data-go-panel="people">주민 만나기 <span aria-hidden="true">→</span></a>
                   <button class="action-button sun" type="button" data-open-player>RADIO 91.7 <span aria-hidden="true">♪</span></button>
-                  <button class="action-button" type="button" data-go-panel="rebuild">재건 현황</button>
+                  <a class="action-button" href="#rebuild" data-go-panel="rebuild">재건 현황</a>
                 </div>
               </div>
 
               <div class="home-visual" aria-label="내일은 분명 맑음 메인 포스터">
                 <span class="tape top" aria-hidden="true"></span>
-                <div class="cover-card"><img src="assets/images/cover.webp" alt="밝은 해온마을에서 함께 살아가는 다섯 주민" fetchpriority="high"></div>
+                <div class="cover-card"><img src="./assets/images/cover.webp" alt="밝은 해온마을에서 함께 살아가는 다섯 주민" fetchpriority="high"></div>
                 <span class="tape side" aria-hidden="true"></span>
                 <div class="mini-terminal">
                   <strong>HAEON_OS v2.1</strong>
@@ -96,23 +97,23 @@
             </header>
             <div class="people-grid">
               <article class="person-card" style="--accent:#d85447" tabindex="0">
-                <span class="person-no">01</span><img src="assets/images/yoo-geonha.webp" alt="탐색과 호위를 담당하는 유건하">
+                <span class="person-no">01</span><img src="./assets/images/yoo-geonha.webp" alt="탐색과 호위를 담당하는 유건하">
                 <div class="person-copy"><span class="person-role">SCAVENGER / INFECTED?</span><h3>유건하</h3><blockquote>“내년 얘긴 하지 마. …근데 그 씨앗은 봄에 심자.”</blockquote><p class="person-detail">외부탐색 · 호위 · 물자조달<br>감염 후 841일째. 아직 인간.</p></div>
               </article>
               <article class="person-card" style="--accent:#4b8bc9" tabindex="0">
-                <span class="person-no">02</span><img src="assets/images/seo-taeo.webp" alt="설계와 재건을 담당하는 서태오">
+                <span class="person-no">02</span><img src="./assets/images/seo-taeo.webp" alt="설계와 재건을 담당하는 서태오">
                 <div class="person-copy"><span class="person-role">RECONSTRUCTION DIRECTOR</span><h3>서태오</h3><blockquote>“일단 다치지 마십시오. 나머지는 제가 정리하겠습니다.”</blockquote><p class="person-detail">토목 · 행정 · 5개년 계획<br>오늘 점심은 또 잊음.</p></div>
               </article>
               <article class="person-card" style="--accent:#9c7cba" tabindex="0">
-                <span class="person-no">03</span><img src="assets/images/yoon-haena.webp" alt="진료와 감염 관찰을 담당하는 윤해나">
+                <span class="person-no">03</span><img src="./assets/images/yoon-haena.webp" alt="진료와 감염 관찰을 담당하는 윤해나">
                 <div class="person-copy"><span class="person-role">MEDICAL OFFICER</span><h3>윤해나</h3><blockquote>“안 죽었어. 그럼 됐지.”</blockquote><p class="person-detail">진료 · 감염관찰 · 응급처치<br>주민 건강 담당. 본인 건강은 방치.</p></div>
               </article>
               <article class="person-card" style="--accent:#efb52e" tabindex="0">
-                <span class="person-no">04</span><img src="assets/images/go-raon.webp" alt="라디오와 소식을 담당하는 고라온">
+                <span class="person-no">04</span><img src="./assets/images/go-raon.webp" alt="라디오와 소식을 담당하는 고라온">
                 <div class="person-copy"><span class="person-role">RADIO HAEON 91.7</span><h3>고라온</h3><blockquote>“오늘 맑음! 감염체 셋! 축제는 예정대로 합니다!”</blockquote><p class="person-detail">라디오 · 무전 · 행사 · 사고<br>마을 방송국이자 인간 확성기.</p></div>
               </article>
               <article class="person-card" style="--accent:#ec8c82" tabindex="0">
-                <span class="person-no">05</span><img src="assets/images/moon-haesol.webp" alt="공동주방과 텃밭을 담당하는 문해솔">
+                <span class="person-no">05</span><img src="./assets/images/moon-haesol.webp" alt="공동주방과 텃밭을 담당하는 문해솔">
                 <div class="person-copy"><span class="person-role">KITCHEN &amp; FARM</span><h3>문해솔</h3><blockquote>“먹고 안 죽는 거랑 잘 사는 건 다른 일이잖아.”</blockquote><p class="person-detail">공동주방 · 텃밭 · 식량<br>귀한 설탕을 케이크로 만드는 위험인물.</p></div>
               </article>
             </div>
@@ -201,7 +202,7 @@
       </header>
       <div class="player-grid">
         <div class="now-playing">
-          <div class="frame-art" aria-hidden="true"><div class="frame-window"><img id="playerArtwork" src="assets/images/cover.webp" alt=""></div><img class="frame-overlay" src="assets/images/radio-frame.webp" alt=""></div>
+          <div class="frame-art" aria-hidden="true"><div class="frame-window"><img id="playerArtwork" src="./assets/images/cover.webp" alt=""></div><img class="frame-overlay" src="./assets/images/radio-frame.webp" alt=""></div>
           <div class="track-meta">
             <span class="frequency">● 91.7 MHz / LIVE</span><h3 id="trackTitle">내일은 분명 맑음</h3><p class="track-artist" id="trackArtist">HAEON ORIGINAL SOUNDTRACK</p>
             <label class="sr-only" for="seekBar">재생 위치</label><input id="seekBar" type="range" min="0" max="100" value="0" step="0.1">
@@ -210,15 +211,15 @@
               <button class="icon-button" id="prevTrack" type="button" aria-label="이전 곡" title="이전 곡">‹</button><button class="icon-button primary" id="playTrack" type="button" aria-label="재생" title="재생">▶</button><button class="icon-button" id="nextTrack" type="button" aria-label="다음 곡" title="다음 곡">›</button>
               <label class="sr-only" for="volumeControl">음량</label><span aria-hidden="true">◖</span><input class="volume" id="volumeControl" type="range" min="0" max="1" value="0.82" step="0.01">
             </div>
-            <p class="audio-status" id="audioStatus">재생 버튼을 누르면 방송을 시작합니다.</p>
+            <p class="audio-status" id="audioStatus">첫 방송을 연결하는 중입니다.</p>
           </div>
         </div>
         <div class="playlist"><div class="playlist-title"><span>PLAYLIST / 06 TRACKS</span><span>HAEON ARCHIVE</span></div><ol class="track-list" id="trackList"></ol></div>
       </div>
-      <audio id="audioPlayer" preload="metadata"></audio>
+      <audio id="audioPlayer" src="./assets/audio/01-tomorrow-will-be-sunny.mp3" autoplay preload="auto"></audio>
     </div>
   </section>
 
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>

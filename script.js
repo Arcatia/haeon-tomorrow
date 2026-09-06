@@ -1,10 +1,35 @@
 (() => {
-      const panelIds = ['home', 'people', 'rebuild', 'map'];
+      const panelAliases = {
+        top: 'home',
+        about: 'home',
+        home: 'home',
+        people: 'people',
+        rebuild: 'rebuild',
+        map: 'map',
+        places: 'map',
+        radio: 'home'
+      };
       const panels = [...document.querySelectorAll('[data-panel]')];
       const navButtons = [...document.querySelectorAll('[data-panel-target]')];
 
-      function showPanel(id, options = {}) {
-        if (!panelIds.includes(id)) id = 'home';
+      function normalizePanelId(value) {
+        const key = String(value || '').replace(/^#/, '').trim().toLowerCase();
+        return panelAliases[key] || 'home';
+      }
+
+      function setAddress(id, replace = false) {
+        const nextHash = `#${id}`;
+        if (location.hash === nextHash) return;
+        try {
+          const method = replace ? 'replaceState' : 'pushState';
+          history[method](null, '', nextHash);
+        } catch {
+          location.hash = nextHash;
+        }
+      }
+
+      function showPanel(value, options = {}) {
+        const id = normalizePanelId(value);
         panels.forEach((panel) => {
           const active = panel.dataset.panel === id;
           panel.classList.toggle('is-active', active);
@@ -12,12 +37,19 @@
           if (active) panel.scrollTop = 0;
         });
         navButtons.forEach((button) => button.setAttribute('aria-selected', String(button.dataset.panelTarget === id)));
-        if (!options.fromHash) history.replaceState(null, '', `#${id}`);
+        if (options.fromHash) {
+          setAddress(id, true);
+        } else {
+          setAddress(id);
+        }
         if (options.focus) document.querySelector(`[data-panel="${id}"]`).focus({ preventScroll: true });
       }
 
       navButtons.forEach((button, index) => {
-        button.addEventListener('click', () => showPanel(button.dataset.panelTarget));
+        button.addEventListener('click', (event) => {
+          if (button.matches('a[href]')) event.preventDefault();
+          showPanel(button.dataset.panelTarget);
+        });
         button.addEventListener('keydown', (event) => {
           if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
           event.preventDefault();
@@ -28,17 +60,21 @@
         });
       });
 
-      document.querySelectorAll('[data-go-panel]').forEach((button) => button.addEventListener('click', () => showPanel(button.dataset.goPanel, { focus: true })));
+      document.querySelectorAll('[data-go-panel]').forEach((button) => button.addEventListener('click', (event) => {
+        if (button.matches('a[href]')) event.preventDefault();
+        showPanel(button.dataset.goPanel, { focus: true });
+      }));
       window.addEventListener('hashchange', () => showPanel(location.hash.slice(1), { fromHash: true }));
+      window.addEventListener('popstate', () => showPanel(location.hash.slice(1), { fromHash: true }));
       showPanel(location.hash.slice(1) || 'home', { fromHash: true });
 
       const tracks = [
-        { title: '내일은 분명 맑음', artist: 'HAEON ORIGINAL SOUNDTRACK', src: 'assets/audio/01-tomorrow-will-be-sunny.mp3', art: 'assets/images/cover.webp', duration: '--:--' },
-        { title: '841 Days', artist: '유건하 · CHARACTER THEME', src: 'assets/audio/02-841-days.mp3', art: 'assets/images/yoo-geonha.webp', duration: '--:--' },
-        { title: 'Blueprint for Tomorrow', artist: '서태오 · CHARACTER THEME', src: 'assets/audio/03-blueprint-for-tomorrow.mp3', art: 'assets/images/seo-taeo.webp', duration: '--:--' },
-        { title: 'Vitals at Dawn', artist: '윤해나 · CHARACTER THEME', src: 'assets/audio/04-vitals-at-dawn.mp3', art: 'assets/images/yoon-haena.webp', duration: '--:--' },
-        { title: 'Radio Haeon 91.7', artist: '고라온 · CHARACTER THEME', src: 'assets/audio/05-radio-haeon.mp3', art: 'assets/images/go-raon.webp', duration: '--:--' },
-        { title: 'Sugar After the End', artist: '문해솔 · CHARACTER THEME', src: 'assets/audio/06-sugar-after-the-end.mp3', art: 'assets/images/moon-haesol.webp', duration: '--:--' }
+        { title: '내일은 분명 맑음', artist: 'HAEON ORIGINAL SOUNDTRACK', src: './assets/audio/01-tomorrow-will-be-sunny.mp3', art: './assets/images/cover.webp', duration: '--:--' },
+        { title: '841 Days', artist: '유건하 · CHARACTER THEME', src: './assets/audio/02-841-days.mp3', art: './assets/images/yoo-geonha.webp', duration: '--:--' },
+        { title: 'Blueprint for Tomorrow', artist: '서태오 · CHARACTER THEME', src: './assets/audio/03-blueprint-for-tomorrow.mp3', art: './assets/images/seo-taeo.webp', duration: '--:--' },
+        { title: 'Vitals at Dawn', artist: '윤해나 · CHARACTER THEME', src: './assets/audio/04-vitals-at-dawn.mp3', art: './assets/images/yoon-haena.webp', duration: '--:--' },
+        { title: 'Radio Haeon 91.7', artist: '고라온 · CHARACTER THEME', src: './assets/audio/05-radio-haeon.mp3', art: './assets/images/go-raon.webp', duration: '--:--' },
+        { title: 'Sugar After the End', artist: '문해솔 · CHARACTER THEME', src: './assets/audio/06-sugar-after-the-end.mp3', art: './assets/images/moon-haesol.webp', duration: '--:--' }
       ];
 
       const drawer = document.getElementById('playerDrawer');
@@ -52,7 +88,7 @@
       const status = document.getElementById('audioStatus');
       const trackList = document.getElementById('trackList');
       let currentIndex = 0;
-      let sourceLoaded = false;
+      let sourceLoaded = audio.getAttribute('src') === tracks[currentIndex].src;
       let lastFocus = null;
 
       const formatTime = (seconds) => {
@@ -104,19 +140,27 @@
         sourceLoaded = false;
         setPlayingUI(false);
         updateTrackUI();
-        if (autoplay) playCurrent();
+        if (autoplay) playCurrent(false);
       }
 
-      async function playCurrent() {
-        if (!audio.paused) { audio.pause(); return; }
+      async function playCurrent(toggle = true) {
+        if (toggle && !audio.paused) { audio.pause(); return; }
         if (!sourceLoaded) {
           audio.src = tracks[currentIndex].src;
           audio.volume = Number(volume.value);
           sourceLoaded = true;
         }
         status.textContent = '주파수 연결 중…';
-        try { await audio.play(); }
-        catch { setPlayingUI(false); status.textContent = '음원 파일을 찾지 못했습니다. assets/audio 폴더를 확인해 주세요.'; }
+        try {
+          await audio.play();
+          setPlayingUI(true);
+          status.textContent = 'ON AIR · 해온 전역 송출 중';
+        } catch (error) {
+          setPlayingUI(false);
+          status.textContent = error?.name === 'NotAllowedError'
+            ? '브라우저 정책상 자동재생이 차단되었습니다. 재생 버튼을 눌러 주세요.'
+            : '음원 파일을 찾지 못했습니다. assets/audio 폴더를 확인해 주세요.';
+        }
       }
 
       function openDrawer(trigger) {
@@ -185,4 +229,5 @@
       clock();
       window.setInterval(clock, 30000);
       updateTrackUI();
+      playCurrent(false);
     })();
