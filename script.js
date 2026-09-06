@@ -1,20 +1,4 @@
 (() => {
-      const viewport = window.visualViewport;
-      let viewportFrame = 0;
-
-      function syncViewportHeight() {
-        window.cancelAnimationFrame(viewportFrame);
-        viewportFrame = window.requestAnimationFrame(() => {
-          const height = Math.round(viewport?.height || window.innerHeight);
-          document.documentElement.style.setProperty('--app-height', `${height}px`);
-        });
-      }
-
-      syncViewportHeight();
-      window.addEventListener('resize', syncViewportHeight, { passive: true });
-      window.addEventListener('orientationchange', syncViewportHeight, { passive: true });
-      viewport?.addEventListener('resize', syncViewportHeight, { passive: true });
-
       const panelAliases = {
         top: 'home',
         about: 'home',
@@ -39,7 +23,6 @@
           const active = panel.dataset.panel === id;
           panel.classList.toggle('is-active', active);
           panel.setAttribute('aria-hidden', String(!active));
-          if (active) panel.scrollTop = 0;
         });
         navButtons.forEach((button) => button.setAttribute('aria-selected', String(button.dataset.panelTarget === id)));
         if (options.focus) document.querySelector(`[data-panel="${id}"]`).focus({ preventScroll: true });
@@ -83,9 +66,15 @@
       const volume = document.getElementById('volumeControl');
       const status = document.getElementById('audioStatus');
       const trackList = document.getElementById('trackList');
+      const intro = document.getElementById('siteIntro');
+      const introStart = document.getElementById('introStart');
+      const introStartLabel = document.getElementById('introStartLabel');
+      const siteApp = document.getElementById('siteApp');
       let currentIndex = 0;
       let sourceLoaded = audio.getAttribute('src') === tracks[currentIndex].src;
       let lastFocus = null;
+      let introClosed = false;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       const formatTime = (seconds) => {
         if (!Number.isFinite(seconds)) return '0:00';
@@ -220,10 +209,41 @@
       seek.addEventListener('input', () => { if (audio.duration) audio.currentTime = (Number(seek.value) / 100) * audio.duration; });
       volume.addEventListener('input', () => { audio.volume = Number(volume.value); });
 
+      function setIntroReady() {
+        if (introClosed) return;
+        intro.classList.add('is-ready');
+        introStart.disabled = false;
+        introStartLabel.textContent = 'START / 해온에 접속';
+        introStart.focus({ preventScroll: true });
+      }
+
+      function enterHaeon() {
+        if (introClosed || introStart.disabled) return;
+        introClosed = true;
+        introStart.disabled = true;
+
+        // 재생 요청은 클릭 이벤트 안에서 가장 먼저 실행해야 브라우저의 사용자 조작 권한이 유지된다.
+        audio.volume = Number(volume.value);
+        playCurrent(false);
+
+        intro.classList.add('is-leaving');
+        window.setTimeout(() => {
+          intro.hidden = true;
+          intro.setAttribute('aria-hidden', 'true');
+          siteApp.removeAttribute('inert');
+          siteApp.setAttribute('aria-hidden', 'false');
+          document.body.classList.remove('intro-open');
+          document.getElementById('home').focus({ preventScroll: true });
+        }, reduceMotion ? 0 : 720);
+      }
+
+      introStart.addEventListener('click', enterHaeon);
+      const introDelay = reduceMotion ? 0 : 1650;
+      window.setTimeout(setIntroReady, introDelay);
+
       const timeEl = document.getElementById('localTime');
       const clock = () => { timeEl.textContent = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()); };
       clock();
       window.setInterval(clock, 30000);
       updateTrackUI();
-      playCurrent(false);
     })();
