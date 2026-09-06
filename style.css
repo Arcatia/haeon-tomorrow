@@ -284,6 +284,8 @@
       cursor: pointer;
       text-align: left;
       text-decoration: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(239,181,46,.24);
       transition: color .18s ease, background .18s ease, border-color .18s ease;
     }
 
@@ -949,11 +951,12 @@
       inset: var(--top-h) 0 var(--hud-h);
       opacity: 0;
       visibility: hidden;
+      pointer-events: none;
       background: rgba(4,23,22,.58);
       backdrop-filter: blur(7px);
       transition: opacity .28s ease, visibility .28s ease;
     }
-    .modal-backdrop.is-open { opacity: 1; visibility: visible; }
+    .modal-backdrop.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
 
     .player-drawer {
       position: fixed;
@@ -968,10 +971,11 @@
       border-bottom: 1px solid rgba(239,181,46,.45);
       box-shadow: 0 30px 85px rgba(0,0,0,.42);
       visibility: hidden;
+      pointer-events: none;
       transform: translateY(calc(-100% - 15px));
       transition: transform .4s cubic-bezier(.2,.8,.2,1), visibility .4s;
     }
-    .player-drawer.is-open { visibility: visible; transform: translateY(0); }
+    .player-drawer.is-open { visibility: visible; pointer-events: auto; transform: translateY(0); }
 
     .player-inner {
       width: min(1040px, calc(100% - 42px));
@@ -1070,6 +1074,8 @@
       .radio-now { display: none; }
       .workspace { grid-template-columns: 1fr; grid-template-rows: 52px minmax(0,1fr); }
       .rail {
+        position: relative;
+        z-index: 20;
         min-width: 0;
         display: block;
         border-right: 0;

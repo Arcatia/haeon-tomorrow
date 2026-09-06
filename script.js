@@ -17,17 +17,6 @@
         return panelAliases[key] || 'home';
       }
 
-      function setAddress(id, replace = false) {
-        const nextHash = `#${id}`;
-        if (location.hash === nextHash) return;
-        try {
-          const method = replace ? 'replaceState' : 'pushState';
-          history[method](null, '', nextHash);
-        } catch {
-          location.hash = nextHash;
-        }
-      }
-
       function showPanel(value, options = {}) {
         const id = normalizePanelId(value);
         panels.forEach((panel) => {
@@ -37,31 +26,22 @@
           if (active) panel.scrollTop = 0;
         });
         navButtons.forEach((button) => button.setAttribute('aria-selected', String(button.dataset.panelTarget === id)));
-        if (options.fromHash) {
-          setAddress(id, true);
-        } else {
-          setAddress(id);
-        }
         if (options.focus) document.querySelector(`[data-panel="${id}"]`).focus({ preventScroll: true });
       }
 
       navButtons.forEach((button, index) => {
-        button.addEventListener('click', (event) => {
-          if (button.matches('a[href]')) event.preventDefault();
-          showPanel(button.dataset.panelTarget);
-        });
+        button.addEventListener('click', () => showPanel(button.dataset.panelTarget));
         button.addEventListener('keydown', (event) => {
           if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
           event.preventDefault();
           const delta = ['ArrowRight', 'ArrowDown'].includes(event.key) ? 1 : -1;
           const next = navButtons[(index + delta + navButtons.length) % navButtons.length];
           next.focus();
-          showPanel(next.dataset.panelTarget);
+          next.click();
         });
       });
 
-      document.querySelectorAll('[data-go-panel]').forEach((button) => button.addEventListener('click', (event) => {
-        if (button.matches('a[href]')) event.preventDefault();
+      document.querySelectorAll('[data-go-panel]').forEach((button) => button.addEventListener('click', () => {
         showPanel(button.dataset.goPanel, { focus: true });
       }));
       window.addEventListener('hashchange', () => showPanel(location.hash.slice(1), { fromHash: true }));
