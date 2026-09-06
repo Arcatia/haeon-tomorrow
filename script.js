@@ -1,4 +1,20 @@
 (() => {
+      const viewport = window.visualViewport;
+      let viewportFrame = 0;
+
+      function syncViewportHeight() {
+        window.cancelAnimationFrame(viewportFrame);
+        viewportFrame = window.requestAnimationFrame(() => {
+          const height = Math.round(viewport?.height || window.innerHeight);
+          document.documentElement.style.setProperty('--app-height', `${height}px`);
+        });
+      }
+
+      syncViewportHeight();
+      window.addEventListener('resize', syncViewportHeight, { passive: true });
+      window.addEventListener('orientationchange', syncViewportHeight, { passive: true });
+      viewport?.addEventListener('resize', syncViewportHeight, { passive: true });
+
       const panelAliases = {
         top: 'home',
         about: 'home',
